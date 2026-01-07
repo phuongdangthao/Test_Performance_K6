@@ -82,7 +82,6 @@ export function loginAndPurchase() {
         JSON.stringify({ username, password }),
         {
           headers: headers,
-          tags: { type: 'setup' }, // Filter in result
         }
       );
 
@@ -93,7 +92,7 @@ export function loginAndPurchase() {
       // cache user for this VU
       vuUser = { username, password };
 
-      sleep(1); // isolate signup traffic
+      sleep(1);
     }
 
   });
@@ -106,7 +105,6 @@ export function loginAndPurchase() {
     const loginRes = http.post(`${BASE_URL}/login`, JSON.stringify({ username: username, password: password, }),
       {
         headers: headers,
-        tags: { type: 'business_logic' },
       });
     console.log('LOGIN: Username: ' + username + ' / Password: ' + password + ' / Response: ' + loginRes.body);
 
@@ -137,11 +135,7 @@ export function loginAndPurchase() {
     sleep(1);
 
     // GO TO HOME PAGE - PRODUCT LIST
-    const listProductsRes = http.get(`${BASE_URL}/entries`,
-      {
-        tags: { type: 'business_logic' },
-      }
-    );
+    const listProductsRes = http.get(`${BASE_URL}/entries`);
 
     check(listProductsRes, { 'load product list': r => r.status === 200 && r.json('Items').length > 0, });
 
@@ -153,7 +147,6 @@ export function loginAndPurchase() {
       const productId = randomIntBetween(1, 9);
       const productRes = http.post(`${BASE_URL}/view`, JSON.stringify({ id: productId, }), {
         headers: headers,
-        tags: { type: 'business_logic' },
       });
 
       check(productRes, { 'load product detail successful': r => r.status === 200 && r.body.length > 0, });
@@ -166,8 +159,6 @@ export function loginAndPurchase() {
         prod_id: productId,
       }), {
         headers: headers,
-        tags: { type: 'business_logic' },
-
       });
       check(cartRes, { 'add product to cart successful': r => r.status === 200 });
 
@@ -181,7 +172,6 @@ export function loginAndPurchase() {
     const cartRes = http.post(`${BASE_URL}/viewcart`, JSON.stringify({ cookie: authToken, flag: true, }),
       {
         headers: headers,
-        tags: { type: 'business_logic' },
       });
     console.log('VIEW CART RESPONSE: ' + cartRes.body);
 
@@ -205,7 +195,6 @@ export function loginAndPurchase() {
     const purchaseRes = http.post(`${BASE_URL}/deletecart`, JSON.stringify({ cookie: cookieViewCart, }),
       {
         headers: headers,
-        tags: { type: 'business_logic' },
       });
     console.log(`PURCHASE RESPONSE: ${purchaseRes.body}`);
 
@@ -216,3 +205,4 @@ export function loginAndPurchase() {
     sleep(1);
   });
 }
+
