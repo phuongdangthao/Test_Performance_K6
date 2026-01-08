@@ -1,13 +1,7 @@
 import http from 'k6/http';
 import { check, group, sleep } from 'k6';
-import { SharedArray } from 'k6/data';
 
 import { randomIntBetween, uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
-
-// Load credentials from JSON file
-const data = new SharedArray('credentials', function () {
-  return JSON.parse(open('./data/credentials.json')).data;
-});
 
 export const options = {
   // Grafana Cloud configuration for k6 Cloud
@@ -205,4 +199,5 @@ export function loginAndPurchase() {
     sleep(1);
   });
 }
+
 
